@@ -24,15 +24,16 @@ class CrossoriginAutoAttributePlugin {
     compiler.hooks.compilation.tap('CrossoriginAutoAttributePlugin', function(
       compilation
     ) {
-      compilation.mainTemplate.hooks.jsonpScript.tap(
-        'JsonpMainTemplatePlugin',
-        source => {
-          return source.replace(
-            /script\.src = [^;]*;/,
-            '$& if (!script.src.indexOf(window.location.origin)) {script.crossOrigin = void 0;}'
-          );
-        }
-      );
+      compilation.mainTemplate.hooks.jsonpScript &&
+        compilation.mainTemplate.hooks.jsonpScript.tap(
+          'JsonpMainTemplatePlugin',
+          source => {
+            return source.replace(
+              /script\.src = [^;]*;/,
+              '$& if (!script.src.indexOf(window.location.origin)) {script.crossOrigin = void 0;}'
+            );
+          }
+        );
     });
   }
 }

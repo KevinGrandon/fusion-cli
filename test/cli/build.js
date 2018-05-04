@@ -473,3 +473,28 @@ test('`fusion build` tree shaking', async t => {
 
   t.end();
 });
+
+test('`fusion build` app with worker integration', async t => {
+  const dir = path.resolve(__dirname, '../fixtures/worker-app');
+
+  var env = Object.create(process.env);
+  env.NODE_ENV = 'production';
+
+  await cmd(`build --dir=${dir} --production`, {env});
+
+  // Run puppeteer test to ensure that page loads with running worker
+  const {proc, port} = await start(`--dir=${dir}`, {env});
+  const browser = await puppeteer.launch({
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+  });
+  const page = await browser.newPage();
+  await page.goto(`http://localhost:${port}/`, {waitUntil: 'load'});
+
+  const content = await page.content();
+  t.ok(content.includes('worker-content'), 'worker-included');
+
+  await browser.close();
+  proc.kill();
+
+  t.end();
+});

@@ -281,6 +281,7 @@ function getConfig({target, env, dir, watch, cover}) {
                       require.resolve('./babel-plugins/babel-plugin-chunkid'),
                       // TODO(#8): sw implementation is totally busted.
                       // require.resolve('./babel-plugins/babel-plugin-sw'),
+                      require.resolve('./babel-plugins/babel-plugin-workerurl'),
                       pragma && [
                         require.resolve('@babel/plugin-transform-react-jsx'),
                         {pragma},
@@ -387,6 +388,7 @@ function getConfig({target, env, dir, watch, cover}) {
           './client-source-map-loader'
         ),
         __SECRET_MULTI_ENTRY_LOADER__: require.resolve('multi-entry-loader'),
+        __SECRET_WORKER_LOADER__: require.resolve('./worker-loader'),
       },
     },
     plugins: [
